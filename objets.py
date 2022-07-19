@@ -1,3 +1,4 @@
+
 class Grille:
     def __init__(self):
         self.valeurs_initiales = [  # difficulté : easy ; Solutionné avec vérifications 1 et 2 ----------------------------------------------
@@ -50,8 +51,8 @@ class Grille:
 
         self.grille_updated = [[Cellule(self.valeurs_initiales, self.positions_cellules, ligne, colonne) for colonne in range(9)] for ligne in range(9)]
 
-        print(self.grille_updated)  # ----------------------------------------------------------------------------
-        print(sum(self.grille_updated, []))  # ----------------------------------------------------------------------------
+#        print(self.grille_updated)  # ----------------------------------------------------------------------------
+#        print(sum(self.grille_updated, []))  # ----------------------------------------------------------------------------
 
         
     def display(self):
@@ -93,17 +94,22 @@ class Cellule:
         self.valeur = valeurs_initiales[self.numero_ligne][self.numero_colonne]
         self.possibilities = ["1", "2", "3", "4", "5", "6", "7", "8", "9"] if self.valeur == " " else []
         self.valeurs_ligne_appartenance = valeurs_initiales[self.numero_ligne]
-        self.positions_ligne_appartenance = valeurs_initiales[self.numero_ligne]
+        self.positions_ligne_appartenance = positions_cellules[self.numero_ligne]
         self.valeurs_colonne_appartenance = [valeurs_initiales[i][self.numero_colonne] for i in range(9)]
         self.positions_colonne_appartenance = [positions_cellules[i][self.numero_colonne] for i in range(9)]
         self.positions_square_appartenance, self.positions_lignes_par_3, self.positions_colonnes_par_3 = self.determine_positions_square_lignes_par_3_colonnes_par_trois(positions_cellules)
         self.valeurs_square_appartenance, self.valeurs_lignes_par_3, self.valeurs_colonnes_par_3 = self.determine_valeurs_square_lignes_par_3_colonnes_par_trois(valeurs_initiales)
 
-    def update_valeurs(self, cellules_organisees):
-        self.valeur = cellules_organisees[self.numero_ligne][self.numero_colonne]
-        self.valeurs_ligne_appartenance = cellules_organisees[self.numero_ligne]
-        self.valeurs_colonne_appartenance = [cellules_organisees[i][self.numero_colonne] for i in range(9)]
-        self.valeurs_square_appartenance, self.valeurs_lignes_par_3, self.valeurs_colonnes_par_3 = self.determine_valeurs_square_lignes_par_3_colonnes_par_trois(cellules_organisees)
+    def update_valeurs(self, jeu):
+#        print(jeu)  # ----------------------------------------------------------------------------
+#        print([[jeu.grille_updated[ligne][colonne].valeur for colonne in range(9)] for ligne in range(9)])
+        valeurs_updated = [[jeu.grille_updated[ligne][colonne].valeur for colonne in range(9)] for ligne in range(9)]
+        self.valeur = jeu.grille_updated[self.numero_ligne][self.numero_colonne].valeur
+#        print(self.valeur)  # ----------------------------------------------------------------------------
+        self.valeurs_ligne_appartenance = [jeu.grille_updated[self.numero_ligne][i].valeur for i in range(9)]
+        self.valeurs_colonne_appartenance = [jeu.grille_updated[i][self.numero_colonne].valeur for i in range(9)]
+        self.valeurs_square_appartenance, self.valeurs_lignes_par_3, self.valeurs_colonnes_par_3 = self.determine_valeurs_square_lignes_par_3_colonnes_par_trois(valeurs_updated)
+#        print(self.valeurs_square_appartenance, self.valeurs_lignes_par_3, self.valeurs_colonnes_par_3)  # ----------------------------------------------------------------------------
 
 
     def determine_positions_square_lignes_par_3_colonnes_par_trois(self, positions_cellules):
@@ -141,44 +147,46 @@ class Cellule:
                 positions_square = sum([positions_cellules[i][6:9] for i in range(6, 9)], [])
                 positions_colonnes_par_3 = [[positions_cellules[i][6] for i in range(9)], [positions_cellules[i][7] for i in range(9)], [positions_cellules[i][8] for i in range(9)]]
         return positions_square, positions_lignes_par_3, positions_colonnes_par_3
-    
-    def determine_valeurs_square_lignes_par_3_colonnes_par_trois(self, valeurs_initiales):
+
+    def determine_valeurs_square_lignes_par_3_colonnes_par_trois(self, valeurs):
+#        print(jeu)  # ----------------------------------------------------------------------------
         if self.numero_ligne <= 2:
-            valeurs_lignes_par_3 = [valeurs_initiales[i] for i in range(3)]
+            valeurs_lignes_par_3 = [valeurs[i] for i in range(3)]
             if self.numero_colonne <= 2:
-                valeurs_square = sum([valeurs_initiales[i][:3] for i in range(3)], [])
-                valeurs_colonnes_par_3 = [valeurs_initiales[i][:3] for i in range(9)]
+                valeurs_square = sum([valeurs[i][:3] for i in range(3)], [])
+                valeurs_colonnes_par_3 = [valeurs[i][:3] for i in range(9)]
             elif 3 <= self.numero_colonne <= 5:
-                valeurs_square = sum([valeurs_initiales[i][3:6] for i in range(3)], [])
-                valeurs_colonnes_par_3 = [valeurs_initiales[i][3:6] for i in range(9)]
+                valeurs_square = sum([valeurs[i][3:6] for i in range(3)], [])
+                valeurs_colonnes_par_3 = [valeurs[i][3:6] for i in range(9)]
             elif 6 <= self.numero_colonne:
-                valeurs_square = sum([valeurs_initiales[i][6:9] for i in range(3)], [])
-                valeurs_colonnes_par_3 = [valeurs_initiales[i][6:9] for i in range(9)]
+                valeurs_square = sum([valeurs[i][6:9] for i in range(3)], [])
+                valeurs_colonnes_par_3 = [valeurs[i][6:9] for i in range(9)]
         elif 3 <= self.numero_ligne <= 5:
-            valeurs_lignes_par_3 = [valeurs_initiales[i] for i in range(3, 6)]
+            valeurs_lignes_par_3 = [valeurs[i] for i in range(3, 6)]
             if self.numero_colonne <= 2:
-                valeurs_square = sum([valeurs_initiales[i][:3] for i in range(3, 6)], [])
-                valeurs_colonnes_par_3 = [valeurs_initiales[i][:3] for i in range(9)]
+                valeurs_square = sum([valeurs[i][:3] for i in range(3, 6)], [])
+                valeurs_colonnes_par_3 = [valeurs[i][:3] for i in range(9)]
             elif 3 <= self.numero_colonne <= 5:
-                valeurs_square = sum([valeurs_initiales[i][3:6] for i in range(3, 6)], [])
-                valeurs_colonnes_par_3 = [valeurs_initiales[i][3:6] for i in range(9)]
+                valeurs_square = sum([valeurs[i][3:6] for i in range(3, 6)], [])
+                valeurs_colonnes_par_3 = [valeurs[i][3:6] for i in range(9)]
             elif 6 <= self.numero_colonne:
-                valeurs_square = sum([valeurs_initiales[i][6:9] for i in range(3, 6)], [])
-                valeurs_colonnes_par_3 = [valeurs_initiales[i][6:9] for i in range(9)]
+                valeurs_square = sum([valeurs[i][6:9] for i in range(3, 6)], [])
+                valeurs_colonnes_par_3 = [valeurs[i][6:9] for i in range(9)]
         elif 6 <= self.numero_ligne:
-            valeurs_lignes_par_3 = [valeurs_initiales[i] for i in range(6, 9)]
+            valeurs_lignes_par_3 = [valeurs[i] for i in range(6, 9)]
             if self.numero_colonne <= 2:
-                valeurs_square = sum([valeurs_initiales[i][:3] for i in range(6, 9)], [])
-                valeurs_colonnes_par_3 = [valeurs_initiales[i][:3] for i in range(9)]
+                valeurs_square = sum([valeurs[i][:3] for i in range(6, 9)], [])
+                valeurs_colonnes_par_3 = [valeurs[i][:3] for i in range(9)]
             elif 3 <= self.numero_colonne <= 5:
-                valeurs_square = sum([valeurs_initiales[i][3:6] for i in range(6, 9)], [])
-                valeurs_colonnes_par_3 = [valeurs_initiales[i][3:6] for i in range(9)]
+                valeurs_square = sum([valeurs[i][3:6] for i in range(6, 9)], [])
+                valeurs_colonnes_par_3 = [valeurs[i][3:6] for i in range(9)]
             elif 6 <= self.numero_colonne:
-                valeurs_square = sum([valeurs_initiales[i][6:9] for i in range(6, 9)], [])
-                valeurs_colonnes_par_3 = [valeurs_initiales[i][6:9] for i in range(9)]
+                valeurs_square = sum([valeurs[i][6:9] for i in range(6, 9)], [])
+                valeurs_colonnes_par_3 = [valeurs[i][6:9] for i in range(9)]
         return valeurs_square, valeurs_lignes_par_3, valeurs_colonnes_par_3
     
     def first_verification(self, jeu):
+#        print(jeu.grille_updated[0][0].valeurs_colonne_appartenance)# ----------------------------------------------------------------------------
         not_possible = []
         for possibility in self.possibilities:
             if possibility in self.valeurs_ligne_appartenance or possibility in self.valeurs_colonne_appartenance or possibility in self.valeurs_square_appartenance:
@@ -186,7 +194,7 @@ class Cellule:
         for solution in not_possible:
             self.possibilities.remove(solution)
         if len(self.possibilities) == 1 and self.valeur == " ":
-            jeu.valeurs_initiales[self.numero_ligne][self.numero_colonne] = self.possibilities[0]
+            jeu.grille_updated[self.numero_ligne][self.numero_colonne].valeur = self.possibilities[0]
 
     def second_verification(self, jeu):
         if self.position in self.positions_lignes_par_3[0]:
@@ -194,64 +202,64 @@ class Cellule:
                 if possibility in self.valeurs_lignes_par_3[1] and possibility in self.valeurs_lignes_par_3[2]:
                     if self.position in self.positions_colonnes_par_3[0]:
                         if possibility in self.valeurs_colonnes_par_3[1] and possibility in self.valeurs_colonnes_par_3[2]:
-                            jeu.valeurs_initiales[self.numero_ligne][self.numero_colonne] = possibility
+                            jeu.grille_updated[self.numero_ligne][self.numero_colonne].valeur = possibility
                     elif self.position in self.positions_colonnes_par_3[1]:
                         if possibility in self.valeurs_colonnes_par_3[0] and possibility in self.valeurs_colonnes_par_3[2]:
-                            jeu.valeurs_initiales[self.numero_ligne][self.numero_colonne] = possibility
+                            jeu.grille_updated[self.numero_ligne][self.numero_colonne].valeur = possibility
                     elif self.position in self.positions_colonnes_par_3[2]:
                         if possibility in self.valeurs_colonnes_par_3[0] and possibility in self.valeurs_colonnes_par_3[1]:
-                            jeu.valeurs_initiales[self.numero_ligne][self.numero_colonne] = possibility
+                            jeu.grille_updated[self.numero_ligne][self.numero_colonne].valeur = possibility
         elif self.position in self.positions_lignes_par_3[1]:
             for possibility in self.possibilities:
                 if possibility in self.valeurs_lignes_par_3[0] and possibility in self.valeurs_lignes_par_3[2]:
                     if self.position in self.positions_colonnes_par_3[0]:
                         if possibility in self.valeurs_colonnes_par_3[1] and possibility in self.valeurs_colonnes_par_3[2]:
-                            jeu.valeurs_initiales[self.numero_ligne][self.numero_colonne] = possibility
+                            jeu.grille_updated[self.numero_ligne][self.numero_colonne].valeur = possibility
                     elif self.position in self.positions_colonnes_par_3[1]:
                         if possibility in self.valeurs_colonnes_par_3[0] and possibility in self.valeurs_colonnes_par_3[2]:
-                            jeu.valeurs_initiales[self.numero_ligne][self.numero_colonne] = possibility
+                            jeu.grille_updated[self.numero_ligne][self.numero_colonne].valeur = possibility
                     elif self.position in self.positions_colonnes_par_3[2]:
                         if possibility in self.valeurs_colonnes_par_3[0] and possibility in self.valeurs_colonnes_par_3[1]:
-                            jeu.valeurs_initiales[self.numero_ligne][self.numero_colonne] = possibility
+                            jeu.grille_updated[self.numero_ligne][self.numero_colonne].valeur = possibility
         elif self.position in self.positions_lignes_par_3[2]:
             for possibility in self.possibilities:
                 if possibility in self.valeurs_lignes_par_3[0] and possibility in self.valeurs_lignes_par_3[1]:
                     if self.position in self.positions_colonnes_par_3[0]:
                         if possibility in self.valeurs_colonnes_par_3[1] and possibility in self.valeurs_colonnes_par_3[2]:
-                            jeu.valeurs_initiales[self.numero_ligne][self.numero_colonne] = possibility
+                            jeu.grille_updated[self.numero_ligne][self.numero_colonne].valeur = possibility
                     elif self.position in self.positions_colonnes_par_3[1]:
                         if possibility in self.valeurs_colonnes_par_3[0] and possibility in self.valeurs_colonnes_par_3[2]:
-                            jeu.valeurs_initiales[self.numero_ligne][self.numero_colonne] = possibility
+                            jeu.grille_updated[self.numero_ligne][self.numero_colonne].valeur = possibility
                     elif self.position in self.positions_colonnes_par_3[2]:
                         if possibility in self.valeurs_colonnes_par_3[0] and possibility in self.valeurs_colonnes_par_3[1]:
-                            jeu.valeurs_initiales[self.numero_ligne][self.numero_colonne] = possibility
+                            jeu.grille_updated[self.numero_ligne][self.numero_colonne].valeur = possibility
 
     def third_verification(self, jeu):
         total_possibilities = []
-        for cellule in jeu.infos_cellules.values():
-            print(f"cellule testée : {cellule.position} || valeur : {cellule.valeur}")  # ----------------------------------------------------------------------------
+        for cellule in sum(jeu.grille_updated, []):
+#            print(f"cellule testée : {cellule.position} || valeur : {cellule.valeur}")  # ----------------------------------------------------------------------------
             if cellule.position != self.position and cellule.position in self.positions_square_appartenance and cellule.valeur == " ":
                 total_possibilities.append(cellule.possibilities)
                 print(f"Cellule : {cellule.position} || Possibilities : {cellule.possibilities}")
         total_possibilities = sorted(list(set(sum(total_possibilities, []))))
         for possibility in self.possibilities:
             if not possibility in total_possibilities:
-                jeu.valeurs_initiales[self.numero_ligne][self.numero_colonne] = possibility
-        print(total_possibilities)  # ----------------------------------------------------------------------------
+                jeu.grille_updated[self.numero_ligne][self.numero_colonne].valeur = possibility
+#        print(total_possibilities)  # ----------------------------------------------------------------------------
 
         total_possibilities = []
-        for cellule in jeu.infos_cellules.values():
+        for cellule in sum(jeu.grille_updated, []):
             if cellule.position != self.position and cellule.position in self.positions_ligne_appartenance and cellule.valeur == " ":
                 total_possibilities.append(cellule.possibilities)
 #                print(f"Cellule : {cellule.position} || Possibilities : {cellule.possibilities}")  # ----------------------------------------------------------------------------
         total_possibilities = sorted(list(set(sum(total_possibilities, []))))
         for possibility in self.possibilities:
             if not possibility in total_possibilities:
-                jeu.valeurs_initiales[self.numero_ligne][self.numero_colonne] = possibility
-        print(total_possibilities)  # ----------------------------------------------------------------------------
+                jeu.grille_updated[self.numero_ligne][self.numero_colonne].valeur = possibility
+#        print(total_possibilities)  # ----------------------------------------------------------------------------
 
         total_possibilities = []
-        for cellule in jeu.infos_cellules.values():
+        for cellule in sum(jeu.grille_updated, []):
             if cellule.position != self.position and cellule.position in self.positions_colonne_appartenance and cellule.valeur == " ":
 #                print(f"colonne appartenance : {self.positions_colonne_appartenance}")  # ----------------------------------------------------------------------------
                 total_possibilities.append(cellule.possibilities)
@@ -259,6 +267,6 @@ class Cellule:
         total_possibilities = sorted(list(set(sum(total_possibilities, []))))
         for possibility in self.possibilities:
             if not possibility in total_possibilities:
-                jeu.valeurs_initiales[self.numero_ligne][self.numero_colonne] = possibility
-        print(total_possibilities)  # ----------------------------------------------------------------------------
+                jeu.grille_updated[self.numero_ligne][self.numero_colonne].valeur = possibility
+#        print(total_possibilities)  # ----------------------------------------------------------------------------
 
