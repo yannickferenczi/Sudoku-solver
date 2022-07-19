@@ -1,7 +1,8 @@
 
 class Grille:
     def __init__(self):
-        self.valeurs_initiales = [  # difficulté : easy ; Solutionné avec vérifications 1 et 2 ----------------------------------------------
+        """
+        self.valeurs_initiales = [  # difficulté : easy ; Solutionné (vérifications 1 et 2 suffisent) ----------------------------------------------
             ["3", "8", " ", "9", " ", " ", "2", " ", "5"],
             [" ", " ", " ", " ", " ", "8", "7", "3", " "],
             [" ", "6", " ", "3", " ", " ", "9", "8", " "],
@@ -12,8 +13,8 @@ class Grille:
             [" ", "7", "4", "6", " ", " ", " ", " ", " "],
             ["8", " ", "1", " ", " ", "2", " ", "6", "7"]
         ]
-
         """
+        
         self.valeurs_initiales = [  # difficulté : medium ; Pas solutionné ----------------------------------------------
             ["9", " ", "7", "8", " ", " ", " ", "6", " "],
             [" ", " ", "6", "7", " ", " ", "1", "8", " "],
@@ -25,10 +26,23 @@ class Grille:
             ["6", " ", " ", "4", " ", " ", " ", " ", "5"],
             ["5", " ", " ", " ", " ", "9", " ", " ", "1"]
         ]
+
+        """
+        self.valeurs_initiales = [  # difficulté : medium ; Solutionné (vérification 1, 2 et 3 suffisent) ----------------------------------------------
+            [" ", " ", "7", " ", " ", "5", " ", " ", "9"],
+            [" ", " ", " ", " ", " ", "8", " ", " ", " "],
+            ["2", " ", "5", "7", "3", " ", " ", " ", " "],
+            ["3", " ", "9", "2", "1", " ", " ", " ", " "],
+            [" ", " ", " ", " ", " ", " ", " ", " ", "4"],
+            ["8", " ", " ", " ", "9", "3", " ", " ", " "],
+            [" ", "7", " ", " ", " ", " ", "3", " ", " "],
+            [" ", " ", " ", " ", " ", " ", " ", "9", " "],
+            [" ", " ", "2", " ", "8", " ", "6", " ", "1"]
+        ]
         """
 
         """
-        self.valeurs_initiales = [  # difficulté : easy ; Solutionné avec vérifications 1 et 2 ----------------------------------------------
+        self.valeurs_initiales = [  # difficulté : easy ; Solutionné (vérifications 1 et 2 suffisent) ----------------------------------------------
             ["5", "3", " ", " ", "7", " ", " ", " ", " "],
             ["6", " ", " ", "1", "9", "5", " ", " ", " "],
             [" ", "9", "8", " ", " ", " ", " ", "6", " "],
@@ -240,7 +254,7 @@ class Cellule:
 #            print(f"cellule testée : {cellule.position} || valeur : {cellule.valeur}")  # ----------------------------------------------------------------------------
             if cellule.position != self.position and cellule.position in self.positions_square_appartenance and cellule.valeur == " ":
                 total_possibilities.append(cellule.possibilities)
-                print(f"Cellule : {cellule.position} || Possibilities : {cellule.possibilities}")
+                print(f"Cellule : {cellule.position} || Possibilities : {cellule.possibilities}")  # ----------------------------------------------------------------------------
         total_possibilities = sorted(list(set(sum(total_possibilities, []))))
         for possibility in self.possibilities:
             if not possibility in total_possibilities:
